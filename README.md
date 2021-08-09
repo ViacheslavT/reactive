@@ -31,7 +31,7 @@ number of virtual users can be configured inside those scripts.
 After response is received, script will generate batch of save requests **POST /save**, one request per each object, this will simulate batch requests of simple UI application.
 Each object will be saved into database. For usual api will be used JDBC driver for webflux api R2DBC.
 3) After batch request executed (all of them should be success) the get request will be sent **GET /users**. Will be invoked JDBC for usual api to get list of users for current VU and R2DBC to get Flux of users for webflux api.
-4) And the last step is generation of bath request to **DELETE /delete** to delete each user separately, 204 will be returned. JDBC used for usual api and R2DBC for webflux.
+4) And the last step is generation of batсh request to **DELETE /delete** to delete each user separately, 204 will be returned. JDBC used for usual api and R2DBC for webflux.
 
 # k6 run results
 Minimal console output information.
