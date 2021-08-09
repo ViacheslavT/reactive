@@ -1,8 +1,8 @@
 spring:
   r2dbc:
-    url: r2dbc:mysql://127.0.0.1:3306/test_db
-    username: test
-    password: test
+    url: ${DB_URL:r2dbc:mysql://127.0.0.1:3306/test_db}
+    username: ${DB_USER:test}
+    password: ${DB_PASSWORD:test}
 
 logging:
   level:
@@ -13,3 +13,6 @@ logging:
 
 server:
   port: 8083
+
+api:
+  base-url: ${API_BASE_URL:http://127.0.0.1:8080}

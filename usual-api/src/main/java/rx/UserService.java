@@ -1,6 +1,7 @@
 package rx;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,9 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final RestTemplate restTemplate;
+
+    @Value("${api.base-url}")
+    private String baseUrl;
 
     @Autowired
     public UserService(UserRepository userRepository, RestTemplate restTemplate) {
@@ -54,7 +58,7 @@ public class UserService {
     }
 
     private User asyncUserRetrieve(String vuNum) {
-        URI uri = UriComponentsBuilder.fromUriString("http://127.0.0.1:8080/user")
+        URI uri = UriComponentsBuilder.fromUriString(baseUrl)
                 .queryParam("vuNum", "{vuNum}")
                 .buildAndExpand(vuNum)
                 .toUri();
@@ -72,5 +76,4 @@ public class UserService {
         }
         return User.builder().error(true).build();
     }
-
 }

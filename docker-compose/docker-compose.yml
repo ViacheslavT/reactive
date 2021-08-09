@@ -1,64 +1,77 @@
-version: '3.1'
+version: '3.7'
 services:
   api:
-    container_name: api
-    image: api
     build:
       context: ../api
       dockerfile: ../api/Dockerfile
-    #command: java -Xmx512m -Xms512m -jar menus-connect-api.jar --external.config.location="/app/config"
-    restart: always
-    working_dir: /app/
+    command: java -Xmx512m -Xms512m -jar /app/app.jar
     ports:
       - '8080:8080'
-#    depends_on:
-#      - fluentd
+    restart: always
+    working_dir: /app/
+    networks:
+      - backend
   usual-api:
-    container_name: usual-api
-    image: usual-api
     build:
       context: ../usual-api
       dockerfile: ../usual-api/Dockerfile
-    #command: java -Xmx512m -Xms512m -jar menus-connect-api.jar --external.config.location="/app/config"
-    restart: always
-    working_dir: /app/
+      args:
+        API_BASE_URL: http://api:8080/user
+        DB_URL: jdbc:mysql://db:3306/test_db
+        DB_USER: test
+        DB_PASSWORD: test
+    command: java -Xmx512m -Xms512m -jar /app/app.jar
     ports:
       - '8082:8082'
+    restart: always
     depends_on:
       - db
       - api
+    working_dir: /app/
+    networks:
+      - backend
   webflux-api:
-    container_name: webflux-api
-    image: webflux-api
     build:
       context: ../webflux-api
       dockerfile: ../webflux-api/Dockerfile
-    #command: java -Xmx512m -Xms512m -jar menus-connect-api.jar --external.config.location="/app/config"
-    restart: always
-    working_dir: /app/
+      args:
+        API_BASE_URL: http://api:8080
+        DB_URL: r2dbc:mysql://db:3306/test_db
+        DB_USER: test
+        DB_PASSWORD: test
+    command: java -Xmx512m -Xms512m -jar /app/app.jar
     ports:
       - '8083:8083'
+    restart: always
     depends_on:
       - db
       - api
+    working_dir: /app/
+    networks:
+      - backend
   db:
+    # same if using docker
+    # docker run --name=mysqldb -d -p 3306:3306 -e MYSQL_ROOT_HOST=% -e MYSQL_ROOT_PASSWORD=root -e MYSQL_USER=test -e MYSQL_PASSWORD=test -e MYSQL_DATABASE=test_db mysql/mysql-server:5.7.24
     container_name: mysql
-    image: mysql:5.7
+    image: mysql:8.0
+    ports:
+      - '3306:3306'
     restart: always
     environment:
       MYSQL_DATABASE: 'test_db'
-      # So you don't have to use root, but you can if you like
       MYSQL_USER: 'test'
-      # You can use whatever password you like
       MYSQL_PASSWORD: 'test'
-      # Password for root access
       MYSQL_ROOT_PASSWORD: 'root'
-    ports:
-      # <Port exposed> : < MySQL Port running inside container>
-      - '3306:3306'
-    expose:
-      # Opens port 3306 on the container
-      - '3306'
-      # Where our data will be persisted
     volumes:
-      - "./scripts/schema.sql:/docker-entrypoint-initdb.d/1.sql"
+      - 'db-data:/var/lib/mysql'
+      - './scripts/schema.sql:/docker-entrypoint-initdb.d/1.sql'
+    networks:
+      - backend
+
+# Volumes
+volumes:
+  db-data:
+
+# Networks to be created to facilitate communication between containers
+networks:
+  backend:

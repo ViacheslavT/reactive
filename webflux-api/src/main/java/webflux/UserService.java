@@ -13,13 +13,13 @@ import java.util.List;
 @Service
 public class UserService {
 
-    private final WebClient webClient = WebClient.create("http://localhost:8080");
-
     private final UserRepository userRepository;
+    private final WebClient webClient;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, WebClient webClient) {
         this.userRepository = userRepository;
+        this.webClient = webClient;
     }
 
     public Mono<User> saveUserToRepository(User user) {
