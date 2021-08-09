@@ -34,7 +34,10 @@ Each object will be saved into database. For usual api will be used JDBC driver 
 4) And the last step is generation of bath request to **DELETE /delete** to delete each user separately, 204 will be returned. JDBC used for usual api and R2DBC for webflux.
 
 # k6 run results
-Minimal console output information
+Minimal console output information.
+**NOTE:** all java apps were run with limited memory:
+>java -Xmx512m -Xms512m -jar /app/app.jar
+
 ## WebFlux
 ### 1 user
 ```
