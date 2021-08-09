@@ -51,7 +51,7 @@ services:
       - backend
   db:
     # same if using docker
-    # docker run --name=mysqldb -d -p 3306:3306 -e MYSQL_ROOT_HOST=% -e MYSQL_ROOT_PASSWORD=root -e MYSQL_USER=test -e MYSQL_PASSWORD=test -e MYSQL_DATABASE=test_db mysql/mysql-server:5.7.24
+    # docker run --name=mysqldb -d -p 3306:3306 -e MYSQL_ROOT_HOST=% -e MYSQL_ROOT_PASSWORD=root -e MYSQL_USER=test -e MYSQL_PASSWORD=test -e MYSQL_DATABASE=test_db mysql/mysql-server:8.0
     container_name: mysql
     image: mysql:8.0
     ports:
