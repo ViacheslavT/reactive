@@ -1,0 +1,15 @@
+spring:
+  r2dbc:
+    url: r2dbc:mysql://127.0.0.1:3306/test_db
+    username: test
+    password: test
+
+logging:
+  level:
+    org:
+      springframework:
+        data:
+          r2dbc: DEBUG
+
+server:
+  port: 8083
