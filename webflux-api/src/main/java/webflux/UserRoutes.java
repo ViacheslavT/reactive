@@ -18,6 +18,7 @@ public class UserRoutes {
                         .POST("/save", handler::saveUser)
                         .GET("/users", handler::findAllUsers)
                         .DELETE("/delete", handler::deleteUser)
+                        .GET("/error", handler::testException)
         ).build();
     }
 }

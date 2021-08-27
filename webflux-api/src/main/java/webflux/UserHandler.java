@@ -1,9 +1,13 @@
 package webflux;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
+import webflux.exceptions.GlobalException;
+
+import java.util.Optional;
 
 import static org.springframework.web.reactive.function.server.ServerResponse.noContent;
 import static org.springframework.web.reactive.function.server.ServerResponse.ok;
@@ -44,5 +48,13 @@ public class UserHandler {
                         .map(Long::valueOf)
                         .orElseThrow(() -> new ServerException("Can't delete user with passed id"))
         ));
+    }
+
+    public Mono<ServerResponse> testException(ServerRequest req) {
+        Optional<String> error = req.queryParam("error");
+        if (error.isEmpty()) {
+            throw new GlobalException(HttpStatus.BAD_REQUEST, "request param city is ERROR");
+        }
+        return ServerResponse.ok().body(error.get(), String.class);
     }
 }
